@@ -26,7 +26,7 @@ def test_batch_draw():
     ellipses = tensor(
         [[2, 1, math.pi / 3, 1, 1], [1.0, 2.0, math.pi / 3, 1.0, 1.0]],
     )  # oblique ecllipse works
-    ellipse_bboxes = ellipse_bbox(ellipses)
+    ellipse_bboxes = ellipse2bbox(ellipses)
 
     _, ax = plt.subplots()
     show_image(torch.rand(3, 5, 5), ax=ax)
