@@ -7,7 +7,6 @@ app = Flask(__name__)
 def index():
     return app.send_static_file('index.html')
 
-
 @app.route('/static/<path:path>')
 def send_static(path):
     return app.send_static_file(path)
