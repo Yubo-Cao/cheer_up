@@ -12,7 +12,7 @@ from torchvision import transforms
 cmap = plt.get_cmap("tab20b")
 
 
-def ellipse_bbox(ellipse: Tensor) -> Tensor:
+def ellipse2bbox(ellipse: Tensor) -> Tensor:
     """Convert an ellipse to a corner to corner rectangle."""
 
     if ellipse.ndim == 1:
@@ -27,12 +27,12 @@ def ellipse_bbox(ellipse: Tensor) -> Tensor:
         return tensor([x - dx, y - dy, x + dx, y + dy])
     else:
         # last dimension is eclipse
-        return torch.stack([ellipse_bbox(e) for e in ellipse[..., :]]).reshape(
+        return torch.stack([ellipse2bbox(e) for e in ellipse[..., :]]).reshape(
             ellipse.shape[:-1] + (4,)
         )
 
 
-def tensor_ellipse(ellipse: Tensor, color: str = "r") -> mpl.patches.Ellipse:
+def tensor2ellipse(ellipse: Tensor, color: str = "r") -> mpl.patches.Ellipse:
     """Convert an ellipse to a matplotlib ellipse."""
 
     if ellipse.ndim == 1:
@@ -49,12 +49,12 @@ def tensor_ellipse(ellipse: Tensor, color: str = "r") -> mpl.patches.Ellipse:
     else:
         # last dimension is eclipse
         return mpl.collections.PatchCollection(
-            [tensor_ellipse(e, color) for e in ellipse[..., :]],
+            [tensor2ellipse(e, color) for e in ellipse[..., :]],
             match_original=True,
         )
 
 
-def tensor_rect(bbox: Tensor, color: str = "r") -> mpl.patches.Rectangle:
+def tensor2rect(bbox: Tensor, color: str = "r") -> mpl.patches.Rectangle:
     """Convert a bounding box to a matplotlib rectangle."""
 
     return mpl.patches.Rectangle(
@@ -96,7 +96,7 @@ def show_bbox(
     ax = _ensure_ax(ax)
     try:
         for b, c, l in zip(bbox, color, label, strict=True):
-            ax.add_patch(tensor_rect(b, c))
+            ax.add_patch(tensor2rect(b, c))
             ax.text(b[0], b[1], l, color=c)
     except ValueError as e:
         raise ValueError(
@@ -113,7 +113,7 @@ def show_ellipse(
         ellipse = ellipse[None, ...]
     ax = _ensure_ax(ax)
     for e in ellipse:
-        ax.add_patch(tensor_ellipse(e, color=color))
+        ax.add_patch(tensor2ellipse(e, color=color))
 
 
 def show_image(image: Tensor | Image.Image, ax: plt.Axes = None):
